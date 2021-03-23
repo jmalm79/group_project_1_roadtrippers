@@ -8,23 +8,29 @@
     <title>Document</title>
 </head>
 <body>
-    <header><h1>Plan your trip!</h1></header>
+    <header>
+        <h1>Plan your trip!</h1> 
+    </header>
+    
     <div class="row">
-    <div class="col-2" >
+    
+    <nav class="col-2" >
         <button>Search:</button>
         <h2>Destinations:</h2>
-        <button>Placeholder</button> <!--will generate dynamic -->
-        <button>Placeholder</button>
-        <button>Placeholder</button>
-    </div>
+        <ul> <!--adding place holder-->
+            <li><button>Placeholder</button></li> <!--dynamically generate -->
+            <li><button>Placeholder</button></li> <!--dynamically generate -->
+            <li><button>Placeholder</button></li> <!--dynamically generate -->
+        </ul>
+    </nav>
 
-    <div class="col-8">
-        <container id="map"></container>
-    
+    <main class="col-8">
+        <figure id="map"></figure>
+            
         <container id="directions"></container>
-    </div>
+    </main>
 
-    <div class="col-2">
+    <aside class="col-2">
         <container id="qrCode"></container>
         <h3>Take it with you!</h3>
         <p>Scan the code below</p>
@@ -33,9 +39,12 @@
     <div>
         <h3>Points of interest:</h3>
         <ul class=pointsOfInterest></ul>
+        <li>Placeholder</li> <!--dynamically generate-->
+        <li>Placeholder</li> <!--dynamically generate-->
+        <li>Placeholder</li> <!--dynamically generate--> 
     </div>
 
-    </div>
+    </aside>
     
 </div>
 </body>
