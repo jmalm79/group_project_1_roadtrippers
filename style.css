@@ -1,3 +1,62 @@
-header{
-    
+#header{
+    background-color: dimgrey;
+    text-align: center;
+    padding-bottom: 5px;
+
 }
+
+
+#h1{
+    font-weight: bold;
+    font-size: 3.5rem;
+
+}
+
+nav{
+    background-color: #afad81;
+    padding: 1%;
+    padding-bottom: 60%;
+    border: solid;
+
+}
+
+body{
+    background-color: ghostwhite;
+
+}
+
+#qrCode{
+    border: solid;
+    padding-bottom: 85%;
+
+}
+
+
+#h3{
+    text-align: center;
+
+}
+
+#p{
+    text-align: center;
+}
+
+#points{
+    list-style-type: none;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
