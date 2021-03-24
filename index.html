@@ -10,13 +10,17 @@
 </head>
 <body>
     <header>
-        <h1>Plan your trip!</h1> 
+        <h1   >Plan your trip!</h1> 
     </header>
     
     <div class="row">
     
-    <nav class="col-2" >
-        <button>Search:</button>
+    <nav class="col-3" >
+        <div class="input-group mb-3">
+            <input type="text" class="form-control">
+            <span class="input-group-text" id="basic-addon2">Search</span>
+        </div>
+        
         <h2>Destinations:</h2>
         <ul> <!--adding place holder-->
             <li><button>Placeholder</button></li> <!--dynamically generate -->
@@ -25,19 +29,19 @@
         </ul>
     </nav>
 
-    <main class="col-8">
+    <main class="col-6">
         <figure id="map"></figure>
             
         <container id="directions"></container>
     </main>
 
-    <aside class="col-2">
-        <container id="qrCode"></container>
+    <aside class="col-3">
+        <div class="qrCode" id="qrCode">
         <h3>Take it with you!</h3>
         <p>Scan the code below</p>
-    
+    </div>
 
-    <div>
+    <div id="points">
         <h3>Points of interest:</h3>
         <ul class=pointsOfInterest></ul>
         <li>Placeholder</li> <!--dynamically generate-->
