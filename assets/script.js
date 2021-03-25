@@ -1,8 +1,10 @@
 
 // Global Variables
-var mapDiv = $("#map")[0];
+var mapDiv = $("#map");
+var searchInp = $("#search-input");
 
 var mapOG;
+var destList = [];
 
 
 // Create the script tag, set the appropriate attributes
@@ -17,11 +19,64 @@ document.head.appendChild(script);
 
 // Attach your callback function to the `window` object
 function initMap() {
-  mapOG = new google.maps.Map(mapDiv, {
+  // Create map
+  mapOG = new google.maps.Map(mapDiv[0], {
     center: { lat: 44.977753, lng: -93.2650108 },
     zoom: 8,
   });
+
+
+  // Options
+  let autoCompOpt = {
+    fields: ["formatted_address", "geometry", "name", "photos", "place_id"],
+    origin: mapOG.getCenter(),
+    strictBounds: false,
+  };
+
+  // Services
+  const autoCompServ = new google.maps.places.Autocomplete(searchInp[0], autoCompOpt);
+  autoCompServ.bindTo("bounds", mapOG);
+
+
+  // Event listeners
+  autoCompServ.addListener("place_changed", () => {
+    const place = autoCompServ.getPlace();
+
+    // Make sure it's an actual place
+    if (!place.geometry || !place.geometry.location) {
+      // User entered the name of a Place that was not suggested and
+      // pressed the Enter key, or the Place Details request failed.
+      window.alert("No details available for input: '" + place.name + "'");
+      return;
+    }
+    searchInp.val("");
+    addDestination(place, mapOG);
+  });
 }
+
+
+function addDestination(placeInp, mapInp) {
+  // If the place has a geometry, then present it on a map.
+  if (placeInp.geometry.viewport) {
+    mapInp.fitBounds(placeInp.geometry.viewport);
+  } else {
+    mapInp.setCenter(placeInp.geometry.location);
+    mapInp.setZoom(17);
+  }
+
+  // Create marker
+  let placeMark = new google.maps.Marker({
+    position: placeInp.geometry.location
+  });
+  placeMark.setMap(mapOG);
+
+  // Build destination object
+  let destination = {
+    place: placeInp,
+    marker: placeMark,
+  };
+}
+
 
 
 /*
