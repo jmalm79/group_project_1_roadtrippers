@@ -16,68 +16,67 @@
     <h1 id="h1">Plan your trip!</h1>
   </header>
 
-  <div class="row">
+  <div class="container-fluid px-5">
+    <div class="row">
+      <nav id="placesToGo" class="col-3">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control">
+          <span class="input-group-text" id="basic-addon2">Search</span>
+        </div>
+        <h2>Destinations:</h2>
+        <div class="placesToGo">
+          <!--adding place holder-->
+          <button>Placeholder</button>
+          <button>Placeholder</button>
+          <!--dynamically generate -->
+          <button>Placeholder</button>
+        </div>
+      </nav>
 
-    <nav id="placesToGo" class="col-3">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control">
-        <span class="input-group-text" id="basic-addon2">Search</span>
-      </div>
-
-      <h2>Destinations:</h2>
-      <div class="placesToGo">
-        <!--adding place holder-->
-        <button>Placeholder</button>
-        <button>Placeholder</button>
-        <!--dynamically generate -->
-        <button>Placeholder</button>
-      </div>
-    </nav>
-
-    <main class="col-6">
-      <div id="map"></div>
-
-      <container id="directions">
-        <p>Hipster Ipsum! I'm baby copper mug man bun keytar bespoke, VHS shaman kogi hashtag shoreditch air plant
-          keffiyeh retro four loko la croix deep v. Iceland snackwave listicle, schlitz four dollar toast fixie kinfolk
-          everyday carry tumeric. Freegan seitan fanny pack quinoa, before they sold out vegan ugh selvage. Succulents
-          art party heirloom hella four dollar toast. Post-ironic photo booth vape DIY sustainable typewriter hexagon
-          tacos hammock tousled.
-
-          Chillwave woke cronut, jean shorts squid DIY coloring book kickstarter normcore hexagon everyday carry. Fanny
-          pack hella tumblr 8-bit man braid affogato coloring book flexitarian succulents literally tilde. Deep v
-          scenester readymade, messenger bag tilde edison bulb narwhal mixtape. Sriracha crucifix palo santo
-          intelligentsia artisan lo-fi. Lo-fi brunch tacos live-edge, enamel pin YOLO mixtape coloring book VHS hexagon
-          pug small batch. Schlitz YOLO master cleanse quinoa, viral pour-over fanny pack lumbersexual poke green juice
-          DIY.</p>
-      </container>
-    </main>
-
-    <aside class="col-3">
-      <div class="qrCode" id="qrCode">
-        <h3>Take it with you!</h3>
-        <p>Scan the code below</p>
-      </div>
-
-      <div id="points">
-        <h3>Points of interest:</h3>
-        <ul class=pointsOfInterest></ul>
-        <li>Placeholder</li>
-        <!--dynamically generate-->
-        <li>Placeholder</li>
-        <!--dynamically generate-->
-        <li>Placeholder</li>
-        <!--dynamically generate-->
-      </div>
-
-    </aside>
-
+      <main class="col-6">
+        <div class="row">
+          <div id="map"></div>
+        </div>
+        <container id="directions">
+          <p>Hipster Ipsum! I'm baby copper mug man bun keytar bespoke, VHS shaman kogi hashtag shoreditch air plant
+            keffiyeh retro four loko la croix deep v. Iceland snackwave listicle, schlitz four dollar toast fixie kinfolk
+            everyday carry tumeric. Freegan seitan fanny pack quinoa, before they sold out vegan ugh selvage. Succulents
+            art party heirloom hella four dollar toast. Post-ironic photo booth vape DIY sustainable typewriter hexagon
+            tacos hammock tousled.
+            Chillwave woke cronut, jean shorts squid DIY coloring book kickstarter normcore hexagon everyday carry. Fanny
+            pack hella tumblr 8-bit man braid affogato coloring book flexitarian succulents literally tilde. Deep v
+            scenester readymade, messenger bag tilde edison bulb narwhal mixtape. Sriracha crucifix palo santo
+            intelligentsia artisan lo-fi. Lo-fi brunch tacos live-edge, enamel pin YOLO mixtape coloring book VHS hexagon
+            pug small batch. Schlitz YOLO master cleanse quinoa, viral pour-over fanny pack lumbersexual poke green juice
+            DIY.</p>
+        </container>
+      </main>
+      <aside class="col-3">
+        <div class="qrCode" id="qrCode">
+          <h3>Take it with you!</h3>
+          <p>Scan the code below</p>
+        </div>
+        <div id="points">
+          <h3>Points of interest:</h3>
+          <ul class=pointsOfInterest></ul>
+          <li>Placeholder</li>
+          <!--dynamically generate-->
+          <li>Placeholder</li>
+          <!--dynamically generate-->
+          <li>Placeholder</li>
+          <!--dynamically generate-->
+        </div>
+      </aside>
+    </div>
   </div>
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
+  <script src="assets/APIkey.js"></script>
+  <script src="assets/script.js"></script>
 </body>
 
 </html>

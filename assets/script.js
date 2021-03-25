@@ -1,83 +1,89 @@
 
+// Global Variables
+var mapDiv = $("#map")[0];
+
+var mapOG;
+
+
 // Create the script tag, set the appropriate attributes
 // This initializes the google maps API thing
 var script = document.createElement("script");
 script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initMap`;
 script.async = true;
 
-document.head.appendChild(script);
-
-// Global Variables
-var mapOG;
-
-
 // Append the 'script' element to 'head'
+document.head.appendChild(script);
 
 
 // Attach your callback function to the `window` object
 function initMap() {
-  let routeReq = {
-    origin: { placeId: "" },
-    destination: { placeId: "" },
-    travelMode: google.maps.TravelMode.DRIVING
-  };
-  mapOG = new google.maps.Map(document.getElementById("map"), {
+  mapOG = new google.maps.Map(mapDiv, {
     center: { lat: 44.977753, lng: -93.2650108 },
     zoom: 8,
   });
-  const geocoder = new google.maps.Geocoder();
-  const placeServ = new google.maps.places.PlacesService(mapOG);
-  const directServ = new google.maps.DirectionsService();
-  const dirRenderServ = new google.maps.DirectionsRenderer();
-
-  dirRenderServ.setMap(mapOG);
-  dirRenderServ.setPanel($("#panel")[0]);
-
-  // const placesServ = new google.maps.Place;
-  // console.log(placesServ);
-
-  const minneapolisSearch = {
-    query: "Minneapolis",
-    fields: ["name", "place_id"]
-  };
-  const duluthSearch = {
-    query: "Duluth",
-    fields: ["name", "place_id"]
-  };
-
-  placeServ.findPlaceFromQuery(minneapolisSearch, (results, status) => {
-    if (status === "OK") {
-      if (results[0]) {
-        let minneapolisId = results[0].place_id;
-        routeReq.origin.placeId = minneapolisId;
-        geocodePlaceId(geocoder, mapOG, results[0].place_id,);
-      } else {
-        window.alert("No results found");
-      }
-    } else {
-      window.alert("PlaceSearch failed due to: " + status);
-    }
-  });
-  placeServ.findPlaceFromQuery(duluthSearch, (results, status) => {
-    if (status === "OK") {
-      if (results[0]) {
-        let duluthId = results[0].place_id;
-        routeReq.destination.placeId = duluthId;
-        geocodePlaceId(geocoder, mapOG, results[0].place_id,);
-      } else {
-        window.alert("No results found");
-      }
-    } else {
-      window.alert("PlaceSearch failed due to: " + status);
-    }
-  });
-  $("#route").on("click", (event) => {
-    directServ.route(routeReq, (result, status) => {
-      console.log(result);
-      dirRenderServ.setDirections(result);
-    });
-  });
 }
+
+
+/*
+let routeReq = {
+  origin: { placeId: "" },
+  destination: { placeId: "" },
+  travelMode: google.maps.TravelMode.DRIVING
+};
+const geocoder = new google.maps.Geocoder();
+const placeServ = new google.maps.places.PlacesService(mapOG);
+const directServ = new google.maps.DirectionsService();
+const dirRenderServ = new google.maps.DirectionsRenderer();
+
+dirRenderServ.setMap(mapOG);
+dirRenderServ.setPanel($("#panel")[0]);
+
+// const placesServ = new google.maps.Place;
+// console.log(placesServ);
+
+const minneapolisSearch = {
+  query: "Minneapolis",
+  fields: ["name", "place_id"]
+};
+const duluthSearch = {
+  query: "Duluth",
+  fields: ["name", "place_id"]
+};
+
+placeServ.findPlaceFromQuery(minneapolisSearch, (results, status) => {
+  if (status === "OK") {
+    if (results[0]) {
+      let minneapolisId = results[0].place_id;
+      routeReq.origin.placeId = minneapolisId;
+      geocodePlaceId(geocoder, mapOG, results[0].place_id,);
+    } else {
+      window.alert("No results found");
+    }
+  } else {
+    window.alert("PlaceSearch failed due to: " + status);
+  }
+});
+placeServ.findPlaceFromQuery(duluthSearch, (results, status) => {
+  if (status === "OK") {
+    if (results[0]) {
+      let duluthId = results[0].place_id;
+      routeReq.destination.placeId = duluthId;
+      geocodePlaceId(geocoder, mapOG, results[0].place_id,);
+    } else {
+      window.alert("No results found");
+    }
+  } else {
+    window.alert("PlaceSearch failed due to: " + status);
+  }
+});
+$("#route").on("click", (event) => {
+  directServ.route(routeReq, (result, status) => {
+    console.log(result);
+    dirRenderServ.setDirections(result);
+  });
+});
+*/
+
 
 // const userCity = prompt("Enter your city: ");
 // const searchRequest = {
