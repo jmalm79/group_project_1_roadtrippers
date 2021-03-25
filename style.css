@@ -1,10 +1,10 @@
-header{
-    background-color: dimgrey;
+header{    
     text-align: center;
-    border-bottom:solid;
+
     padding-bottom: 1px;
-    background-image: linear-gradient(0deg, rgba(150,150,150,0), rgba(254,254,254,1));
 }
+
+
 
 h1{
     font-weight: bold;
@@ -15,9 +15,10 @@ h1{
 nav{
     padding: 1%;
     padding-bottom: 60%;
-    border: solid;
+    border-bottom: solid;
+    border-radius: 25px;
     background-color:#969696;
-    background-image: linear-gradient(0deg, rgba(150,150,150,0), rgba(254,254,254,1));
+    background-image: linear-gradient(180deg, rgb(135 197 226 / 0%), rgba(254,254,254,1), rgba(150,150,150,0));
 }
 
 #placesToGo{
@@ -27,16 +28,17 @@ nav{
 
 
 body{
-    background-color: ghostwhite;
+    background-color: white;
 
 }
 
+
 #qrCode{
-    border: solid;
     padding-bottom: 85%;
     background-color:#969696;
-    background-image: linear-gradient(0deg, rgba(150,150,150,0), rgba(254,254,254,1));
-    margin-bottom:1%;
+    background-image: linear-gradient(180deg, rgba(150,150,150,0), rgba(254,254,254,1));
+    border-radius: 25px 25px 0 0;
+
 }
 
 
@@ -50,7 +52,8 @@ p{
 }
 
 #points{
-    border: solid;
+    border-bottom: solid;
+    border-radius: 0 0 25px 25px;
     padding-bottom: 300%;
     background-color:#969696;
     background-image: linear-gradient(0deg, rgba(150,150,150,0), rgba(254,254,254,1));
