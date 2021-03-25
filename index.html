@@ -1,58 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <title>Document</title>
 </head>
+
 <body>
-    <header>
-        <h1 id="h1">Plan your trip!</h1> 
-    </header>
-    
-    <div class="row">
-    
-    <nav id="placesToGo" class="col-3" >
-        <div class="input-group mb-3">
-            <input type="text" class="form-control">
-            <span class="input-group-text" id="basic-addon2">Search</span>
-        </div>
-        
-        <h2>Destinations:</h2>
-        <div class="placesToGo"> <!--adding place holder-->
-            <button>Placeholder</button>
-            <button>Placeholder</button><!--dynamically generate -->
-            <button>Placeholder</button>
-        </div>
+  <header>
+    <h1 id="h1">Plan your trip!</h1>
+  </header>
+
+  <div class="row">
+
+    <nav id="placesToGo" class="col-3">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control">
+        <span class="input-group-text" id="basic-addon2">Search</span>
+      </div>
+
+      <h2>Destinations:</h2>
+      <div class="placesToGo">
+        <!--adding place holder-->
+        <button>Placeholder</button>
+        <button>Placeholder</button>
+        <!--dynamically generate -->
+        <button>Placeholder</button>
+      </div>
     </nav>
 
     <main class="col-6">
-        <figure id="map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2822.5257689656546!2d-93.22934855570021!3d44.973629458862646!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b32d69f70ac7ff%3A0xe31217a152df9978!2sUniversity%20of%20Minnesota!5e0!3m2!1sen!2sus!4v1616617536655!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy" height="600" width="900"></iframe></figure>
-            
-        <container id="directions"><p>Hipster Ipsum!  I'm baby copper mug man bun keytar bespoke, VHS shaman kogi hashtag shoreditch air plant keffiyeh retro four loko la croix deep v. Iceland snackwave listicle, schlitz four dollar toast fixie kinfolk everyday carry tumeric. Freegan seitan fanny pack quinoa, before they sold out vegan ugh selvage. Succulents art party heirloom hella four dollar toast. Post-ironic photo booth vape DIY sustainable typewriter hexagon tacos hammock tousled.
+      <div id="map"></div>
 
-            Chillwave woke cronut, jean shorts squid DIY coloring book kickstarter normcore hexagon everyday carry. Fanny pack hella tumblr 8-bit man braid affogato coloring book flexitarian succulents literally tilde. Deep v scenester readymade, messenger bag tilde edison bulb narwhal mixtape. Sriracha crucifix palo santo intelligentsia artisan lo-fi. Lo-fi brunch tacos live-edge, enamel pin YOLO mixtape coloring book VHS hexagon pug small batch. Schlitz YOLO master cleanse quinoa, viral pour-over fanny pack lumbersexual poke green juice DIY.</p></container>
+      <container id="directions">
+        <p>Hipster Ipsum! I'm baby copper mug man bun keytar bespoke, VHS shaman kogi hashtag shoreditch air plant
+          keffiyeh retro four loko la croix deep v. Iceland snackwave listicle, schlitz four dollar toast fixie kinfolk
+          everyday carry tumeric. Freegan seitan fanny pack quinoa, before they sold out vegan ugh selvage. Succulents
+          art party heirloom hella four dollar toast. Post-ironic photo booth vape DIY sustainable typewriter hexagon
+          tacos hammock tousled.
+
+          Chillwave woke cronut, jean shorts squid DIY coloring book kickstarter normcore hexagon everyday carry. Fanny
+          pack hella tumblr 8-bit man braid affogato coloring book flexitarian succulents literally tilde. Deep v
+          scenester readymade, messenger bag tilde edison bulb narwhal mixtape. Sriracha crucifix palo santo
+          intelligentsia artisan lo-fi. Lo-fi brunch tacos live-edge, enamel pin YOLO mixtape coloring book VHS hexagon
+          pug small batch. Schlitz YOLO master cleanse quinoa, viral pour-over fanny pack lumbersexual poke green juice
+          DIY.</p>
+      </container>
     </main>
 
     <aside class="col-3">
-        <div class="qrCode" id="qrCode">
+      <div class="qrCode" id="qrCode">
         <h3>Take it with you!</h3>
         <p>Scan the code below</p>
-    </div>
+      </div>
 
-    <div id="points">
+      <div id="points">
         <h3>Points of interest:</h3>
         <ul class=pointsOfInterest></ul>
-        <li>Placeholder</li> <!--dynamically generate-->
-        <li>Placeholder</li> <!--dynamically generate-->
-        <li>Placeholder</li> <!--dynamically generate--> 
-    </div>
+        <li>Placeholder</li>
+        <!--dynamically generate-->
+        <li>Placeholder</li>
+        <!--dynamically generate-->
+        <li>Placeholder</li>
+        <!--dynamically generate-->
+      </div>
 
     </aside>
-    
-</div>
+
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 </body>
+
 </html>
