@@ -6,6 +6,7 @@ var searchInp = $("#search-input");
 var mapOG;
 var destList = [];
 
+const apiKey = prompt("Enter the API key: ");
 
 // Create the script tag, set the appropriate attributes
 // This initializes the google maps API thing
