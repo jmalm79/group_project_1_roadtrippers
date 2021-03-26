@@ -22,7 +22,11 @@ var destinationRoute;
 let directServ;
 let dirRenderServ;
 
-// const apiKey = prompt("Enter the API key: ");
+var apiKey = localStorage.getItem("apiKey");
+if (apiKey === null) {
+  apiKey = prompt("Enter the API key: ");
+  localStorage.setItem("apiKey", apiKey);
+}
 
 // Create the script tag, set the appropriate attributes
 // This initializes the google maps API thing
