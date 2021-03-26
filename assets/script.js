@@ -1,12 +1,32 @@
+/* eslint-disable no-alert */
 
 // Global Variables
 var mapDiv = $("#map");
 var searchInp = $("#search-input");
+var destBtnCont = $("#destination-btn-container");
+var destPic = $("#dest-img");
+var destName = $("#dest-name");
+var destAddr = $("#dest-addr");
+var destSite = $("#dest-site");
+var calcRoute = $("#calc-route");
+var directDiv = $("#directions");
+var qrPic = $("#qr-pic");
 
 var mapOG;
-var destList = [];
+var destList = {};
 
-const apiKey = prompt("Enter the API key: ");
+var originRoute;
+var destinationRoute;
+
+// Global Services
+let directServ;
+let dirRenderServ;
+
+var apiKey = localStorage.getItem("apiKey");
+if (apiKey === null) {
+  apiKey = prompt("Enter the API key: ");
+  localStorage.setItem("apiKey", apiKey);
+}
 
 // Create the script tag, set the appropriate attributes
 // This initializes the google maps API thing
@@ -18,7 +38,7 @@ script.async = true;
 document.head.appendChild(script);
 
 
-// Attach your callback function to the `window` object
+// Callback to run after google maps API runs; intialize map
 function initMap() {
   // Create map
   mapOG = new google.maps.Map(mapDiv[0], {
@@ -26,36 +46,42 @@ function initMap() {
     zoom: 8,
   });
 
-
-  // Options
-  let autoCompOpt = {
-    fields: ["formatted_address", "geometry", "name", "photos", "place_id"],
+  // Autocomplete search options
+  const autoCompOpt = {
+    fields: ["formatted_address", "geometry", "name", "photos", "place_id", "website"],
     origin: mapOG.getCenter(),
     strictBounds: false,
   };
 
-  // Services
+  // Create services
   const autoCompServ = new google.maps.places.Autocomplete(searchInp[0], autoCompOpt);
+  directServ = new google.maps.DirectionsService();
+  dirRenderServ = new google.maps.DirectionsRenderer();
   autoCompServ.bindTo("bounds", mapOG);
 
 
-  // Event listeners
+  // Event listener for search
   autoCompServ.addListener("place_changed", () => {
+    // Get the place object for what was searached
     const place = autoCompServ.getPlace();
 
     // Make sure it's an actual place
     if (!place.geometry || !place.geometry.location) {
       // User entered the name of a Place that was not suggested and
       // pressed the Enter key, or the Place Details request failed.
-      window.alert("No details available for input: '" + place.name + "'");
+
+      // TODO: replace with modal
+      window.alert(`No details available for input: '${place.name}'`);
       return;
     }
+    // Clear search input value
     searchInp.val("");
+    // Add destination to variables and handle things with it
     addDestination(place, mapOG);
   });
 }
 
-
+// Handle place data
 function addDestination(placeInp, mapInp) {
   // If the place has a geometry, then present it on a map.
   if (placeInp.geometry.viewport) {
@@ -66,199 +92,89 @@ function addDestination(placeInp, mapInp) {
   }
 
   // Create marker
-  let placeMark = new google.maps.Marker({
+  const placeMark = new google.maps.Marker({
     position: placeInp.geometry.location
   });
   placeMark.setMap(mapOG);
 
+  // Create new button for this destination
+  const newBtn = $("<button>")
+    .addClass("btn btn-primary d-block my-3")
+    .text(placeInp.name)
+    .attr("data-placeid", placeInp.place_id);
+
+  destBtnCont.append(newBtn);
+
   // Build destination object
-  let destination = {
+  const destination = {
     place: placeInp,
     marker: placeMark,
+    button: newBtn
   };
+  if (originRoute === undefined) {
+    originRoute = destination;
+  }
+  destinationRoute = destination;
+  destList[placeInp.place_id] = destination;
 }
 
 
+destBtnCont.on("click", "button", (event) => {
+  const clickedPlaceId = event.currentTarget.dataset.placeid;
+  const clickedDest = destList[clickedPlaceId];
+  const clickedDestPlace = destList[clickedPlaceId].place;
+  mapOG.panTo(clickedDestPlace.geometry.location);
 
-/*
-let routeReq = {
-  origin: { placeId: "" },
-  destination: { placeId: "" },
-  travelMode: google.maps.TravelMode.DRIVING
-};
-const geocoder = new google.maps.Geocoder();
-const placeServ = new google.maps.places.PlacesService(mapOG);
-const directServ = new google.maps.DirectionsService();
-const dirRenderServ = new google.maps.DirectionsRenderer();
-
-dirRenderServ.setMap(mapOG);
-dirRenderServ.setPanel($("#panel")[0]);
-
-// const placesServ = new google.maps.Place;
-// console.log(placesServ);
-
-const minneapolisSearch = {
-  query: "Minneapolis",
-  fields: ["name", "place_id"]
-};
-const duluthSearch = {
-  query: "Duluth",
-  fields: ["name", "place_id"]
-};
-
-placeServ.findPlaceFromQuery(minneapolisSearch, (results, status) => {
-  if (status === "OK") {
-    if (results[0]) {
-      let minneapolisId = results[0].place_id;
-      routeReq.origin.placeId = minneapolisId;
-      geocodePlaceId(geocoder, mapOG, results[0].place_id,);
-    } else {
-      window.alert("No results found");
-    }
+  // Eventually check if attributes exist
+  if (clickedDestPlace.photos) {
+    destPic.attr("src", clickedDestPlace.photos[0].getUrl());
   } else {
-    window.alert("PlaceSearch failed due to: " + status);
+    destPic.attr("src", "https://via.placeholder.com/200x200");
+  }
+  destName.text(clickedDestPlace.name);
+  destAddr.text(clickedDestPlace.formatted_address);
+  if (clickedDestPlace.website) {
+    destSite.removeClass("disabled");
+    destSite.attr("href", clickedDestPlace.website);
+  } else {
+    destSite.attr("href", "#");
+    destSite.addClass("disabled");
   }
 });
-placeServ.findPlaceFromQuery(duluthSearch, (results, status) => {
-  if (status === "OK") {
-    if (results[0]) {
-      let duluthId = results[0].place_id;
-      routeReq.destination.placeId = duluthId;
-      geocodePlaceId(geocoder, mapOG, results[0].place_id,);
-    } else {
-      window.alert("No results found");
+
+calcRoute.on("click", (event) => {
+  let routeReq = {
+    origin: { placeId: originRoute.place.place_id },
+    destination: { placeId: destinationRoute.place.place_id },
+    travelMode: google.maps.TravelMode.DRIVING,
+    optimizeWaypoints: true,
+    waypoints: []
+  };
+
+  const originPID = routeReq.origin.placeId;
+  const originObj = destList[originPID];
+
+  const destinPID = routeReq.destination.placeId;
+  const destinObj = destList[destinPID];
+
+  Object.keys(destList).forEach((pId) => {
+    if ((pId !== routeReq.origin.placeId) && (pId !== routeReq.destination.placeId)) {
+      routeReq.waypoints.push({ location: { placeId: pId } });
     }
-  } else {
-    window.alert("PlaceSearch failed due to: " + status);
-  }
-});
-$("#route").on("click", (event) => {
+  });
+
+  console.log(routeReq);
+
+  dirRenderServ.setMap(mapOG);
+  dirRenderServ.setPanel(directDiv[0]);
+
   directServ.route(routeReq, (result, status) => {
-    console.log(result);
     dirRenderServ.setDirections(result);
   });
+
+  const gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(gMapUrl)}&size=200x200`;
+  console.log(qrUrl);
+  qrPic.attr("src", qrUrl);
+  console.log(qrUrl);
 });
-*/
-
-
-// const userCity = prompt("Enter your city: ");
-// const searchRequest = {
-//   query: userCity,
-//   fields: ["name", "place_id"]
-// };
-// placeServ.findPlaceFromQuery(searchRequest, (results, status) => {
-//   if (status === "OK") {
-//     if (results[0]) {
-//       console.log(results);
-//       geocodePlaceId(geocoder, mapOG, results[0].place_id,);
-//     } else {
-//       window.alert("No results found");
-//     }
-//   } else {
-//     window.alert("PlaceSearch failed due to: " + status);
-//   }
-// });
-//  Search -> display markers
-// let userCity = prompt("Enter your city: ");
-// const searchFrom = new google.maps.LatLng(41.863825656627604, -87.80338149007245);
-// const searchRequest = {
-//   keyword: userCity,
-//   location: searchFrom,
-//   radius: 200000
-// };
-// placeServ.nearbySearch(searchRequest, (results, status) => {
-//   if (status === "OK") {
-//     if (results[0]) {
-//       console.log(results);
-//       for (let i = 0; i < results.length; i++) {
-//         geocodePlaceId(geocoder, mapOG, results[i].place_id);
-//       }
-//     } else {
-//       window.alert("No results found");
-//     }
-//   } else {
-//     window.alert("PlaceSearch failed due to: " + status);
-//   }
-// });
-
-
-// This function is called when the user clicks the UI button requesting
-// a geocode of a place ID.
-function geocodePlaceId(geocoder, map, placeid) {
-  geocoder.geocode({ placeId: placeid }, (results, status) => {
-    if (status === "OK") {
-      if (results[0]) {
-        map.setZoom(11);
-        map.setCenter(results[0].geometry.location);
-        const marker = new google.maps.Marker({
-          map,
-          position: results[0].geometry.location,
-        });
-      } else {
-        window.alert("No results found");
-      }
-    } else {
-      window.alert(`Geocoder failed due to: ${status}`);
-      console.log(results, status);
-    }
-  });
-}
-
-
-/*
-google.maps.event.addDomListener(window, 'load', function () {
-  var places = new google.maps.places.Autocomplete(document.getElementById('txtFrom'));
-  google.maps.event.addListener(places, 'place_changed', function () {
-    var place = places.getPlace();
-  });
-  var places1 = new google.maps.places.Autocomplete(document.getElementById('txtTo'));
-  google.maps.event.addListener(places1, 'place_changed', function () {
-    var place1 = places1.getPlace();
-  });
-});
-
-function calculateRoute(rootfrom, rootto) {
-  // Center initialized to Naples, Italy
-  var myOptions = {
-    zoom: 10,
-    center: new google.maps.LatLng(40.84, 14.25),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
-  // Draw the map
-  var mapObject = new google.maps.Map(document.getElementById("DivMap"), myOptions);
-
-  var directionsService = new google.maps.DirectionsService();
-  var directionsRequest = {
-    origin: rootfrom,
-    destination: rootto,
-    travelMode: google.maps.DirectionsTravelMode.DRIVING,
-    unitSystem: google.maps.UnitSystem.METRIC
-  };
-  directionsService.route(
-    directionsRequest,
-    function (response, status) {
-      if (status == google.maps.DirectionsStatus.OK) {
-        new google.maps.DirectionsRenderer({
-          map: mapObject,
-          directions: response
-        });
-      }
-      else
-        $("#lblError").append("Unable To Find Root");
-    }
-  );
-}
-
-$(document).ready(function () {
-  // If the browser supports the Geolocation API
-  if (typeof navigator.geolocation == "undefined") {
-    $("#lblError").text("Your browser doesn't support the Geolocation API");
-    return;
-  }
-  $("#calculate-route").submit(function (event) {
-    event.preventDefault();
-    calculateRoute($("#txtFrom").val(), $("#txtTo").val());
-  });
-});
-
-*/

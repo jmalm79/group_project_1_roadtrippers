@@ -11,61 +11,63 @@
   <title>Document</title>
 </head>
 
-<body>
-  <header class="container-fluid">
-    <h1 id="h1">Plan your trip!</h1>
+<body class="bg-light">
+  <header>
+    <h1 id="h1" class="bg-primary">Plan your trip!</h1>
   </header>
 
-  <div id="all" class="container-fluid px-5">
-    <div class="row">
+  <div class="container-fluid px-5 bg-secondary">    <div class="row">
       <nav id="placesToGo" class="col-3">
         <div class="input-group mb-3">
           <input type="text" class="form-control" id="search-input">
         </div>
         <h2>Destinations:</h2>
-        <div class="placesToGo">
+        <div class="placesToGo" id="destination-btn-container">
           <!--adding place holder-->
-          <!-- <button>Placeholder</button>
-          <button>Placeholder</button> -->
-          <!--dynamically generate -->
-          <!-- <button>Placeholder</button> -->
+
+          <!-- <button class="btn btn-primary d-block my-3">Placeholder</button>
+          <button class="btn btn-primary d-block my-3">Placeholder</button>
+          <button class="btn btn-primary d-block my-3">Placeholder</button> -->
+        </div>
+        
+        <div class="">
+          <button id="calc-route" class="d-inline btn btn-dark mt-5">Get route</button>
+
         </div>
       </nav>
 
+
       <main class="col-6">
-        <div class="row">
+        <div class="row mb-3">
           <div id="map"></div>
         </div>
-        <container id="directions">
-          <p>Hipster Ipsum! I'm baby copper mug man bun keytar bespoke, VHS shaman kogi hashtag shoreditch air plant
-            keffiyeh retro four loko la croix deep v. Iceland snackwave listicle, schlitz four dollar toast fixie kinfolk
-            everyday carry tumeric. Freegan seitan fanny pack quinoa, before they sold out vegan ugh selvage. Succulents
-            art party heirloom hella four dollar toast. Post-ironic photo booth vape DIY sustainable typewriter hexagon
-            tacos hammock tousled.
-            Chillwave woke cronut, jean shorts squid DIY coloring book kickstarter normcore hexagon everyday carry. Fanny
-            pack hella tumblr 8-bit man braid affogato coloring book flexitarian succulents literally tilde. Deep v
-            scenester readymade, messenger bag tilde edison bulb narwhal mixtape. Sriracha crucifix palo santo
-            intelligentsia artisan lo-fi. Lo-fi brunch tacos live-edge, enamel pin YOLO mixtape coloring book VHS hexagon
-            pug small batch. Schlitz YOLO master cleanse quinoa, viral pour-over fanny pack lumbersexual poke green juice
-            DIY.</p>
-        </container>
+
+        <div id="directions">
+        </div>
       </main>
+
       <aside class="col-3">
+        <div class="row">
+          <div class="card col-12" style="width: 18rem;">
+            <img id="dest-img" src="https://via.placeholder.com/200x200" class="card-img-top" alt="destination image">
+            <div class="card-body">
+              <h5 class="card-title" id="dest-name">Card title</h5>
+              <p id="dest-addr" class="card-text text-left">Address</p>
+              <a id="dest-site" href="#" class="btn btn-primary disabled">Website</a>
+            </div>
+          </div>
+        </div>
+
+
         <div class="qrCode" id="qrCode">
           <h3>Take it with you!</h3>
           <p>Scan the code below</p>
-        </div>
-        <div id="points">
-          <h3>Points of interest:</h3>
-          <ul class=pointsOfInterest></ul>
-          <li>Placeholder</li>
-          <!--dynamically generate-->
-          <li>Placeholder</li>
-          <!--dynamically generate-->
-          <li>Placeholder</li>
-          <!--dynamically generate-->
+          <img id="qr-pic" src="https://via.placeholder.com/200x200" alt="qr">
         </div>
       </aside>
+    </div>
+    <div class="row">
+      
     </div>
   </div>
 
@@ -74,7 +76,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
-  <!-- <script src="assets/APIkey.js"></script> -->
+  <script src="assets/APIkey.js"></script>
   <script src="assets/script.js"></script>
 </body>
 
