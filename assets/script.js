@@ -52,7 +52,7 @@ function initMap() {
   // Services
   const autoCompServ = new google.maps.places.Autocomplete(searchInp[0], autoCompOpt);
   directServ = new google.maps.DirectionsService();
-  dirRenderServ = new google.maps.DirectionsRenderer()
+  dirRenderServ = new google.maps.DirectionsRenderer();
   autoCompServ.bindTo("bounds", mapOG);
 
 
@@ -257,7 +257,6 @@ $("#route").on("click", (event) => {
 });
 */
 
-
 // const userCity = prompt("Enter your city: ");
 // const searchRequest = {
 //   query: userCity,
@@ -301,7 +300,6 @@ $("#route").on("click", (event) => {
 
 // This function is called when the user clicks the UI button requesting
 // a geocode of a place ID.
-
 
 /*
 google.maps.event.addDomListener(window, 'load', function () {
