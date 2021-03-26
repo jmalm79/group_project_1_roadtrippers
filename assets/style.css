@@ -7,13 +7,23 @@ html, body {
 
 header{    
     text-align: center;
-
-    padding-bottom: 1px;
+    padding-bottom: 15px;
+    background-image:url(https://www.farmers.gov/sites/default/files/2019-05/RoadTrip-Blogheader-JennSized.jpg);
+    width:25%;
+    height:25%;
+    background-size: cover;
+    border-radius:4px;
+    opacity: 75%; 
 }
 
 h1{
+    padding-top: 20px;
     font-weight: bold;
-    font-size: 2.5rem;
+    font-size: 4.0rem;
+}
+
+#all{
+    padding-top: 15px;
 }
 
 nav{
@@ -30,6 +40,7 @@ nav{
 }
 
 #map {
+  padding-top: 15px;  
   height: 100%;
   width: 100%;
 }
@@ -39,6 +50,7 @@ nav{
 }
 
 body{
+    
     background-color: white;
 
 }
