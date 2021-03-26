@@ -1,12 +1,24 @@
+/* eslint-disable no-alert */
 
 // Global Variables
 var mapDiv = $("#map");
 var searchInp = $("#search-input");
+var destBtnCont = $("#destination-btn-container");
+var destPic = $("#dest-img");
+var destName = $("#dest-name");
+var destAddr = $("#dest-addr");
+var destSite = $("#dest-site");
+var calcRoute = $("#calc-route");
+var directDiv = $("#directions");
+var qrPic = $("#qr-pic");
 
 var mapOG;
-var destList = [];
+var destList = {};
 
-const apiKey = prompt("Enter the API key: ");
+var originRoute;
+var destinationRoute;
+
+// const apiKey = prompt("Enter the API key: ");
 
 // Create the script tag, set the appropriate attributes
 // This initializes the google maps API thing
@@ -18,6 +30,10 @@ script.async = true;
 document.head.appendChild(script);
 
 
+// Global Services
+let directServ;
+let dirRenderServ;
+
 // Attach your callback function to the `window` object
 function initMap() {
   // Create map
@@ -26,16 +42,17 @@ function initMap() {
     zoom: 8,
   });
 
-
   // Options
   let autoCompOpt = {
-    fields: ["formatted_address", "geometry", "name", "photos", "place_id"],
+    fields: ["formatted_address", "geometry", "name", "photos", "place_id", "website"],
     origin: mapOG.getCenter(),
     strictBounds: false,
   };
 
   // Services
   const autoCompServ = new google.maps.places.Autocomplete(searchInp[0], autoCompOpt);
+  directServ = new google.maps.DirectionsService();
+  dirRenderServ = new google.maps.DirectionsRenderer()
   autoCompServ.bindTo("bounds", mapOG);
 
 
@@ -47,7 +64,7 @@ function initMap() {
     if (!place.geometry || !place.geometry.location) {
       // User entered the name of a Place that was not suggested and
       // pressed the Enter key, or the Place Details request failed.
-      window.alert("No details available for input: '" + place.name + "'");
+      window.alert(`No details available for input: '${place.name}'`);
       return;
     }
     searchInp.val("");
@@ -71,14 +88,114 @@ function addDestination(placeInp, mapInp) {
   });
   placeMark.setMap(mapOG);
 
+  // Create new button for this destination
+  const newBtn = $("<button>")
+    .addClass("btn btn-primary d-block my-3")
+    .text(placeInp.name)
+    .attr("data-placeid", placeInp.place_id);
+
+  destBtnCont.append(newBtn);
+
   // Build destination object
   let destination = {
     place: placeInp,
     marker: placeMark,
+    button: newBtn
   };
+  if (originRoute === undefined) {
+    originRoute = destination;
+  }
+  destinationRoute = destination;
+  destList[placeInp.place_id] = destination;
 }
 
 
+function geocodePlaceId(geocoder, map, placeid) {
+  geocoder.geocode({ placeId: placeid }, (results, status) => {
+    if (status === "OK") {
+      if (results[0]) {
+        map.setZoom(11);
+        map.setCenter(results[0].geometry.location);
+        const marker = new google.maps.Marker({
+          map,
+          position: results[0].geometry.location,
+        });
+      } else {
+        window.alert("No results found");
+      }
+    } else {
+      window.alert(`Geocoder failed due to: ${status}`);
+      console.log(results, status);
+    }
+  });
+}
+
+
+destBtnCont.on("click", "button", (event) => {
+  const clickedPlaceId = event.currentTarget.dataset.placeid;
+  const clickedDest = destList[clickedPlaceId];
+  const clickedDestPlace = destList[clickedPlaceId].place;
+  mapOG.panTo(clickedDestPlace.geometry.location);
+
+  // Eventually check if attributes exist
+  if (clickedDestPlace.photos) {
+    destPic.attr("src", clickedDestPlace.photos[0].getUrl());
+  } else {
+    destPic.attr("src", "https://via.placeholder.com/200x200");
+  }
+  destName.text(clickedDestPlace.name);
+  destAddr.text(clickedDestPlace.formatted_address);
+  if (clickedDestPlace.website) {
+    destSite.removeClass("disabled");
+    destSite.attr("href", clickedDestPlace.website);
+  } else {
+    destSite.attr("href", "#");
+    destSite.addClass("disabled");
+  }
+});
+
+calcRoute.on("click", (event) => {
+  let routeReq = {
+    origin: { placeId: originRoute.place.place_id },
+    destination: { placeId: destinationRoute.place.place_id },
+    travelMode: google.maps.TravelMode.DRIVING,
+    optimizeWaypoints: true,
+    waypoints: []
+  };
+
+  const originPID = routeReq.origin.placeId;
+  const originObj = destList[originPID];
+
+  const destinPID = routeReq.destination.placeId;
+  const destinObj = destList[destinPID];
+
+  Object.keys(destList).forEach((pId) => {
+    if ((pId !== routeReq.origin.placeId) && (pId !== routeReq.destination.placeId)) {
+      routeReq.waypoints.push({ location: { placeId: pId } });
+    }
+  });
+
+  console.log(routeReq);
+
+  dirRenderServ.setMap(mapOG);
+  dirRenderServ.setPanel(directDiv[0]);
+
+  directServ.route(routeReq, (result, status) => {
+    dirRenderServ.setDirections(result);
+  });
+
+  const gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(gMapUrl)}&size=200x200`;
+  console.log(qrUrl);
+  qrPic.attr("src", qrUrl);
+  console.log(qrUrl);
+});
+
+
+/**
+
+https://api.qrserver.com/v1/create-qr-code/?data=https://www.google.com/maps/dir/?api=1&origin=minneapolis&origin_place_id=ChIJvbt3k5Azs1IRB-56L4TJn5M&destination=duluth&destination_place_id=ChIJ_zcueH5SrlIRcgxY63a__ZA&size=200x200
+ */
 
 /*
 let routeReq = {
@@ -184,25 +301,6 @@ $("#route").on("click", (event) => {
 
 // This function is called when the user clicks the UI button requesting
 // a geocode of a place ID.
-function geocodePlaceId(geocoder, map, placeid) {
-  geocoder.geocode({ placeId: placeid }, (results, status) => {
-    if (status === "OK") {
-      if (results[0]) {
-        map.setZoom(11);
-        map.setCenter(results[0].geometry.location);
-        const marker = new google.maps.Marker({
-          map,
-          position: results[0].geometry.location,
-        });
-      } else {
-        window.alert("No results found");
-      }
-    } else {
-      window.alert(`Geocoder failed due to: ${status}`);
-      console.log(results, status);
-    }
-  });
-}
 
 
 /*
