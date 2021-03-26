@@ -128,7 +128,7 @@ destBtnCont.on("click", "button", (event) => {
   if (clickedDestPlace.photos) {
     destPic.attr("src", clickedDestPlace.photos[0].getUrl());
   } else {
-    destPic.attr("src", "https://via.placeholder.com/200x200");
+    destPic.attr("src", "./assets/Roadtrippers.png");
   }
   destName.text(clickedDestPlace.name);
   destAddr.text(clickedDestPlace.formatted_address);

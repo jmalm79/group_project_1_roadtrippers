@@ -8,28 +8,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
   <link rel="stylesheet" href="assets/style.css">
-  <title>Document</title>
+  <title>RoadTrippers</title>
 </head>
 
-<body class="bg-light">
-  <header>
-    <h1 id="h1" class="bg-primary">Plan your trip!</h1>
+<body>
+  <header class="container-fluid">
+    <h1 id="h1">Plan your trip!</h1>
   </header>
 
-  <div class="container-fluid px-5 bg-secondary">
+  <div id="all" class="container-fluid px-5">
     <div class="row">
       <nav id="placesToGo" class="col-3">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" id="search-input">
+          <input type="text" class="form-control pac-target-input" id="search-input" placeholder="Enter a location"
+            autocomplete="off">
         </div>
         <h2>Destinations:</h2>
         <div class="placesToGo" id="destination-btn-container">
-          <!--adding place holder-->
-          <!-- <button class="btn btn-primary d-block my-3">Placeholder</button>
-          <button class="btn btn-primary d-block my-3">Placeholder</button>
-          <button class="btn btn-primary d-block my-3">Placeholder</button> -->
         </div>
-        
+
         <div class="">
           <button id="calc-route" class="d-inline btn btn-dark mt-5">Get route</button>
         </div>
@@ -38,17 +35,16 @@
 
       <main class="col-6">
         <div class="row mb-3">
-          <div id="map"></div>
+          <div id="map" style="position: relative; overflow: hidden;">
+          </div> 
         </div>
 
-        <div id="directions">
-        </div>
       </main>
 
       <aside class="col-3">
         <div class="row">
           <div class="card col-12" style="width: 18rem;">
-            <img id="dest-img" src="https://via.placeholder.com/200x200" class="card-img-top" alt="destination image">
+            <img id="dest-img" src="assets/Roadtrippers.png" class="card-img-top" alt="destination image">
             <div class="card-body">
               <h5 class="card-title" id="dest-name">Card title</h5>
               <p id="dest-addr" class="card-text text-left">Address</p>
@@ -57,26 +53,48 @@
           </div>
         </div>
 
-
-        <div class="qrCode" id="qrCode">
-          <h3>Take it with you!</h3>
-          <p>Scan the code below</p>
-          <img id="qr-pic" src="https://via.placeholder.com/200x200" alt="qr">
-        </div>
       </aside>
     </div>
-    <div class="row">
-      
-    </div>
-  </div>
+    <div>
 
+      <div class="row">
+        <div class="col-3">
+
+          <div class="qrCode" id="qrCode">
+            <h3>Take it with you!</h3>
+            <p>Scan the code below</p>
+            <img id="qr-pic" src="https://via.placeholder.com/200x200" alt="qr">
+          </div>
+        </div>
+
+
+        <main class="col-6 justify-content: center">
+
+
+          <div id="directions" style="direction: ltr;"></div>
+        </main>
+
+        <aside class="col-3">
+          <div class="row">
+
+          </div>
+
+
+
+        </aside>
+      </div>
+
+    </div>
+
+
+
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-
-  <script src="assets/APIkey.js"></script>
   <script src="assets/script.js"></script>
+  </div>
 </body>
 
 </html>
