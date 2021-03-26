@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 
 // Global Variables
 var mapDiv = $("#map");
@@ -163,7 +162,6 @@ calcRoute.on("click", (event) => {
     }
   });
 
-  console.log(routeReq);
 
   dirRenderServ.setMap(mapOG);
   dirRenderServ.setPanel(directDiv[0]);
@@ -174,7 +172,5 @@ calcRoute.on("click", (event) => {
 
   const gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(gMapUrl)}&size=200x200`;
-  console.log(qrUrl);
   qrPic.attr("src", qrUrl);
-  console.log(qrUrl);
 });
