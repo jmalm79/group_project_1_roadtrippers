@@ -35,14 +35,15 @@ nav{
     background-image: linear-gradient(180deg, rgb(135 197 226 / 0%), rgba(254,254,254,1), rgba(150,150,150,0));
 }
 
-#placesToGo{
+/* #placesToGo{
     padding-left:38px
-}
+} */
 
 #map {
   padding-top: 15px;  
   height: 100%;
   width: 100%;
+  margin-left: 2.5%;
 }
 
 .row {
