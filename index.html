@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
   <link rel="stylesheet" href="assets/style.css">
-  <title>Document</title>
+  <title>Road Trip Planner</title>
 </head>
 
 <body class="bg-light">
@@ -17,21 +17,23 @@
   </header>
 
   <div class="container-fluid px-5 bg-secondary">
-    <div class="row">
+    <div class="row" id="top-row">
       <nav id="placesToGo" class="col-3">
         <div class="input-group mb-3">
           <input type="text" class="form-control" id="search-input">
         </div>
         <h2>Destinations:</h2>
         <div class="placesToGo" id="destination-btn-container">
-          <!--adding place holder-->
-          <!-- <button class="btn btn-primary d-block my-3">Placeholder</button>
-          <button class="btn btn-primary d-block my-3">Placeholder</button>
-          <button class="btn btn-primary d-block my-3">Placeholder</button> -->
         </div>
-        
+
         <div class="">
-          <button id="calc-route" class="d-inline btn btn-dark mt-5">Get route</button>
+          <button id="calc-route" class="d-inline btn btn-dark mt-5" disabled="disabled">Get route</button>
+          <div id="route-alert" class="alert alert-danger alert-dismissible fade d-none mt-2" role="alert">
+            <p class="mb-0">Can't find a route, try again</p>
+            <button type="button" class="close" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -39,9 +41,6 @@
       <main class="col-6">
         <div class="row mb-3">
           <div id="map"></div>
-        </div>
-
-        <div id="directions">
         </div>
       </main>
 
@@ -57,16 +56,25 @@
           </div>
         </div>
 
+      </aside>
+    </div>
 
+    <div class="row" id="bottom-row">
+      <div class="col-3">
         <div class="qrCode" id="qrCode">
           <h3>Take it with you!</h3>
           <p>Scan the code below</p>
           <img id="qr-pic" src="https://via.placeholder.com/200x200" alt="qr">
         </div>
-      </aside>
-    </div>
-    <div class="row">
-      
+      </div>
+
+      <div class="col-6">
+        <div id="directions" class="overflow-auto h-25"></div>
+      </div>
+
+      <div class="col-3">
+        <div>idk</div>
+      </div>
     </div>
   </div>
 
@@ -75,7 +83,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 
-  <script src="assets/APIkey.js"></script>
   <script src="assets/script.js"></script>
 </body>
 

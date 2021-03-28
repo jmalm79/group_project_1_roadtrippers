@@ -10,19 +10,19 @@ var destSite = $("#dest-site");
 var calcRoute = $("#calc-route");
 var directDiv = $("#directions");
 var qrPic = $("#qr-pic");
+var routeAlert = $("#route-alert");
 
 var mapOG;
 var destList = {};
+var orderInputted = [];
 
-var originRoute;
-var destinationRoute;
 
 // Global Services
 let directServ;
 let dirRenderServ;
 
 var apiKey = localStorage.getItem("apiKey");
-if (apiKey === null) {
+if (apiKey === null || apiKey === "null") {
   apiKey = prompt("Enter the API key: ");
   localStorage.setItem("apiKey", apiKey);
 }
@@ -97,39 +97,43 @@ function addDestination(placeInp, mapInp) {
   placeMark.setMap(mapOG);
 
   // Create new button for this destination
+
+  const btnDiv = $("<div>")
+    .addClass("my-4");
+
   const newBtn = $("<button>")
-    .addClass("btn btn-primary d-block my-3")
+    .addClass("btn btn-primary mr-2")
     .text(placeInp.name)
     .attr("data-placeid", placeInp.place_id);
 
-  destBtnCont.append(newBtn);
+  const delBtn = $("<button>")
+    .addClass("btn btn-danger bold px-2")
+    .text("X");
+
+  btnDiv.append(newBtn, [delBtn]);
+  destBtnCont.append(btnDiv);
 
   // Build destination object
   const destination = {
     place: placeInp,
     marker: placeMark,
-    button: newBtn
+    button: newBtn,
+    deleteButton: delBtn
   };
-  if (originRoute === undefined) {
-    originRoute = destination;
-  }
-  destinationRoute = destination;
+
   destList[placeInp.place_id] = destination;
+  orderInputted.push(placeInp.place_id);
+  fillDestData(destination.place);
+  updateRouteBtn();
 }
 
-
-destBtnCont.on("click", "button", (event) => {
-  const clickedPlaceId = event.currentTarget.dataset.placeid;
-  const clickedDest = destList[clickedPlaceId];
-  const clickedDestPlace = destList[clickedPlaceId].place;
-  mapOG.panTo(clickedDestPlace.geometry.location);
-
-  // Eventually check if attributes exist
+function fillDestData(clickedDestPlace) {
   if (clickedDestPlace.photos) {
     destPic.attr("src", clickedDestPlace.photos[0].getUrl());
   } else {
     destPic.attr("src", "https://via.placeholder.com/200x200");
   }
+
   destName.text(clickedDestPlace.name);
   destAddr.text(clickedDestPlace.formatted_address);
   if (clickedDestPlace.website) {
@@ -139,16 +143,65 @@ destBtnCont.on("click", "button", (event) => {
     destSite.attr("href", "#");
     destSite.addClass("disabled");
   }
+}
+
+function updateRouteBtn() {
+  console.log(orderInputted.length);
+  if (orderInputted.length < 2) {
+    // Disable button
+    calcRoute.attr("disabled", "disabled");
+  } else {
+    calcRoute.removeAttr("disabled");
+  }
+}
+
+// Hide no destination alert warning; close
+routeAlert.on("click", "button", (event) => {
+  event.preventDefault();
+  routeAlert.removeClass("show");
+  setTimeout(() => {
+    routeAlert.addClass("d-none");
+  }, 200);
+});
+
+// Show danger alert for bad route
+function routeAlertShow() {
+  routeAlert.removeClass("d-none");
+  routeAlert.addClass("show");
+}
+
+// Destination buttons
+destBtnCont.on("click", "button", (event) => {
+  if ($(event.currentTarget).hasClass("btn-primary")) {
+    // Get place object from clicked button
+    const clickedPlaceId = event.currentTarget.dataset.placeid;
+    const clickedDestPlace = destList[clickedPlaceId].place;
+    mapOG.panTo(clickedDestPlace.geometry.location);
+    fillDestData(clickedDestPlace);
+    // Fill in destination data given place information
+  } else {
+    // X button clicked
+    let removedPID = $(event.currentTarget).siblings()[0].dataset.placeid;
+    destList[removedPID].marker.setMap(null);
+    destList[removedPID].marker = null;
+    delete destList[removedPID];
+    orderInputted.splice((orderInputted.indexOf(removedPID)), 1);
+    $(event.currentTarget).parent().remove();
+    updateRouteBtn();
+  }
 });
 
 calcRoute.on("click", (event) => {
-  let routeReq = {
-    origin: { placeId: originRoute.place.place_id },
-    destination: { placeId: destinationRoute.place.place_id },
+  const routeReq = {
+    origin: { placeId: orderInputted[0] },
+    destination: { placeId: orderInputted[orderInputted.length - 1] },
     travelMode: google.maps.TravelMode.DRIVING,
     optimizeWaypoints: true,
     waypoints: []
   };
+
+  const waypointNames = [];
+  const waypointPIDs = [];
 
   const originPID = routeReq.origin.placeId;
   const originObj = destList[originPID];
@@ -156,9 +209,14 @@ calcRoute.on("click", (event) => {
   const destinPID = routeReq.destination.placeId;
   const destinObj = destList[destinPID];
 
+  console.log(routeReq);
+
   Object.keys(destList).forEach((pId) => {
     if ((pId !== routeReq.origin.placeId) && (pId !== routeReq.destination.placeId)) {
+      // Destination is a waypoint
       routeReq.waypoints.push({ location: { placeId: pId } });
+      waypointNames.push(destList[pId].place.name);
+      waypointPIDs.push(pId);
     }
   });
 
@@ -167,10 +225,21 @@ calcRoute.on("click", (event) => {
   dirRenderServ.setPanel(directDiv[0]);
 
   directServ.route(routeReq, (result, status) => {
+    if (status !== "OK") {
+      routeAlertShow();
+    }
     dirRenderServ.setDirections(result);
   });
 
-  const gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
+  let gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
+  let waypointEncodedURL = "";
+
+  if (routeReq.waypoints.length > 0) {
+    waypointEncodedURL = `&waypoints=${encodeURIComponent(waypointNames.join("|"))}&waypoint_place_ids=${encodeURIComponent(waypointPIDs.join("|"))}`;
+    gMapUrl += waypointEncodedURL;
+  }
+  console.log(waypointEncodedURL);
+  console.log(gMapUrl);
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(gMapUrl)}&size=200x200`;
   qrPic.attr("src", qrUrl);
 });

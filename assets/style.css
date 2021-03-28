@@ -1,11 +1,12 @@
-
+* {
+  box-sizing: border-box;
+}
 
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
-
 
 header{    
     text-align: center;
@@ -66,8 +67,9 @@ p{
 }
 
 #dest-img {
-  max-width: 100%;
-  max-height: 400px;
+  max-width: 80%;
+  max-height: 300px;
+  margin: auto;
 }
 
 #points{
