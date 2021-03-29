@@ -21,6 +21,7 @@ var orderInputted = [];
 let directServ;
 let dirRenderServ;
 
+// Save API key
 var apiKey = localStorage.getItem("apiKey");
 if (apiKey === null || apiKey === "null") {
   apiKey = prompt("Enter the API key: ");
@@ -97,7 +98,6 @@ function addDestination(placeInp, mapInp) {
   placeMark.setMap(mapOG);
 
   // Create new button for this destination
-
   const btnDiv = $("<div>")
     .addClass("my-4");
 
@@ -127,11 +127,12 @@ function addDestination(placeInp, mapInp) {
   updateRouteBtn();
 }
 
+// Update screen with information from data
 function fillDestData(clickedDestPlace) {
   if (clickedDestPlace.photos) {
     destPic.attr("src", clickedDestPlace.photos[0].getUrl());
   } else {
-    destPic.attr("src", "https://via.placeholder.com/200x200");
+    destPic.attr("src", "assets/Roadtrippers.png");
   }
 
   destName.text(clickedDestPlace.name);
@@ -145,6 +146,7 @@ function fillDestData(clickedDestPlace) {
   }
 }
 
+// Disable get route if not enough destinations
 function updateRouteBtn() {
   console.log(orderInputted.length);
   if (orderInputted.length < 2) {
@@ -181,7 +183,7 @@ destBtnCont.on("click", "button", (event) => {
     // Fill in destination data given place information
   } else {
     // X button clicked
-    let removedPID = $(event.currentTarget).siblings()[0].dataset.placeid;
+    const removedPID = $(event.currentTarget).siblings()[0].dataset.placeid;
     destList[removedPID].marker.setMap(null);
     destList[removedPID].marker = null;
     delete destList[removedPID];
@@ -191,6 +193,7 @@ destBtnCont.on("click", "button", (event) => {
   }
 });
 
+// Calculate the route
 calcRoute.on("click", (event) => {
   const routeReq = {
     origin: { placeId: orderInputted[0] },
@@ -200,6 +203,7 @@ calcRoute.on("click", (event) => {
     waypoints: []
   };
 
+  // Get information needed for url
   const waypointNames = [];
   const waypointPIDs = [];
 
@@ -209,8 +213,7 @@ calcRoute.on("click", (event) => {
   const destinPID = routeReq.destination.placeId;
   const destinObj = destList[destinPID];
 
-  console.log(routeReq);
-
+  // Go through all destinations, if it's not origin or destination, it must be waypoint
   Object.keys(destList).forEach((pId) => {
     if ((pId !== routeReq.origin.placeId) && (pId !== routeReq.destination.placeId)) {
       // Destination is a waypoint
@@ -226,11 +229,13 @@ calcRoute.on("click", (event) => {
 
   directServ.route(routeReq, (result, status) => {
     if (status !== "OK") {
+      // Error getting route, so display the alert
       routeAlertShow();
     }
     dirRenderServ.setDirections(result);
   });
 
+  // Build the url for API fetches
   let gMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originObj.place.name)}&origin_place_id=${encodeURIComponent(originPID)}&destination=${encodeURIComponent(destinObj.place.name)}&destination_place_id=${encodeURIComponent(destinPID)}`;
   let waypointEncodedURL = "";
 
@@ -238,8 +243,7 @@ calcRoute.on("click", (event) => {
     waypointEncodedURL = `&waypoints=${encodeURIComponent(waypointNames.join("|"))}&waypoint_place_ids=${encodeURIComponent(waypointPIDs.join("|"))}`;
     gMapUrl += waypointEncodedURL;
   }
-  console.log(waypointEncodedURL);
-  console.log(gMapUrl);
+  // Make url for QR code
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(gMapUrl)}&size=200x200`;
   qrPic.attr("src", qrUrl);
 });
